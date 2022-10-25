@@ -1,23 +1,15 @@
-import logo from './logo.svg';
-import './App.css';
+import { useQuery } from "@apollo/client";
+import { GET_POKEMON_DETAILS, GET_ALL_POKEMONS } from "./queries/getPokemons";
 
 function App() {
+  const { data, loading, error } = useQuery(GET_ALL_POKEMONS);
+  // const { data, loading, error } = useQuery(GET_POKEMON_DETAILS);
+
+  console.log("data: ", data);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <p>Hello World</p>
     </div>
   );
 }
