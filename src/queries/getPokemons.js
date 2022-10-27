@@ -12,7 +12,7 @@ export const GET_POKEMON_DETAILS = gql`
 `;
 
 export const GET_ALL_POKEMONS = gql`
-  query getAllPokemonSpecies {
-    getAllPokemonSpecies(offset: 0, take: 1)
+  query getAllPokemonSpecies($offset: Int, $take: Int) {
+    getAllPokemonSpecies(offset: $offset, take: $take)
   }
 `;
