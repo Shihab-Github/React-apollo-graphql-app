@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useQuery } from "@apollo/client";
 import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -15,7 +17,7 @@ import { GET_ALL_POKEMONS } from "../../../queries/getPokemons";
 
 export default function PokemonList() {
   const [page, setPage] = useState(1);
-  const { data, loading, error, fetchMore } = useQuery(GET_ALL_POKEMONS, {
+  const { data, fetchMore, updateQuery } = useQuery(GET_ALL_POKEMONS, {
     variables: {
       offset: 0,
       take: 10,
@@ -23,7 +25,7 @@ export default function PokemonList() {
   });
 
   const handlePageChange = (event, value) => {
-    let newValue = 10 * (value-1);
+    let newValue = 10 * (value - 1);
     fetchMore({
       variables: {
         offset: newValue,
@@ -37,10 +39,34 @@ export default function PokemonList() {
     setPage(value);
   };
 
-  console.log("data: ", data);
+  const search = (e) => {
+    let term = e.target.value;
+    let filteredData = data.getAllPokemonSpecies.filter(
+      (item) => item.toLowerCase().indexOf(term) > -1
+    );
+    console.log(filteredData);
+    updateQuery((data) => ({
+      getAllPokemonSpecies: filteredData,
+    }));
+  };
 
   return (
     <Box p={2}>
+      <Box mb={1} display="flex" justifyContent="space-between">
+        <Box>
+          <Typography variant="h5" gutterBottom>
+            Pokemons
+          </Typography>
+        </Box>
+        <Box>
+          <TextField
+            id="outlined-basic"
+            variant="standard"
+            label="Search pokemons"
+            onChange={search}
+          />
+        </Box>
+      </Box>
       <TableContainer component={Paper}>
         <Table aria-label="simple table">
           <TableHead>
@@ -79,6 +105,7 @@ export default function PokemonList() {
           />
         </Box>
       </TableContainer>
+      {/* <button onChange={search}>Search</button> */}
     </Box>
   );
 }
