@@ -17,7 +17,7 @@ import { GET_ALL_POKEMONS } from "../../../queries/getPokemons";
 
 export default function PokemonList() {
   const [page, setPage] = useState(1);
-  const { data, fetchMore, updateQuery } = useQuery(GET_ALL_POKEMONS, {
+  const { data, fetchMore, updateQuery, refetch } = useQuery(GET_ALL_POKEMONS, {
     variables: {
       offset: 0,
       take: 10,
@@ -41,13 +41,22 @@ export default function PokemonList() {
 
   const search = (e) => {
     let term = e.target.value;
-    let filteredData = data.getAllPokemonSpecies.filter(
-      (item) => item.toLowerCase().indexOf(term) > -1
-    );
-    console.log(filteredData);
-    updateQuery((data) => ({
-      getAllPokemonSpecies: filteredData,
-    }));
+    if (term.trim().length > 0) {
+      let filteredData = data.getAllPokemonSpecies.filter(
+        (item) => item.toLowerCase().indexOf(term) > -1
+      );
+      console.log(filteredData);
+      updateQuery((data) => ({
+        getAllPokemonSpecies: filteredData,
+      }));
+    } else {
+      refetch({
+        variables: {
+          offset: 0,
+          take: 10,
+        },
+      });
+    }
   };
 
   return (
