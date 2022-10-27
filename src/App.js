@@ -1,16 +1,19 @@
-import { useQuery } from "@apollo/client";
-import { GET_POKEMON_DETAILS, GET_ALL_POKEMONS } from "./queries/getPokemons";
+import React, { Suspense, lazy } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import PokemonList from "./features/Pokemon/List";
+
+const PokemonDetails = lazy(() => import('./features/Pokemon/Detail'))
 
 function App() {
-  const { data, loading, error } = useQuery(GET_ALL_POKEMONS);
-  // const { data, loading, error } = useQuery(GET_POKEMON_DETAILS);
-
-  console.log("data: ", data);
-
   return (
-    <div>
-      <p>Hello World</p>
-    </div>
+    <Suspense fallback={<div>loading...</div>}>
+      <Router>
+        <Routes>
+          <Route path="/" element={<PokemonList />} />
+          <Route path="/detail" element={<PokemonDetails />} />
+        </Routes>
+      </Router>
+    </Suspense>
   );
 }
 
