@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useQuery } from "@apollo/client";
 import Box from "@mui/material/Box";
+import { useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Table from "@mui/material/Table";
@@ -16,6 +17,7 @@ import Paper from "@mui/material/Paper";
 import { GET_ALL_POKEMONS } from "../../../queries/getPokemons";
 
 export default function PokemonList() {
+  const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const { data, fetchMore, updateQuery, refetch } = useQuery(GET_ALL_POKEMONS, {
     variables: {
@@ -59,6 +61,10 @@ export default function PokemonList() {
     }
   };
 
+  const onPokemonClick = (pokemon) => {
+    navigate("/detail/" + pokemon);
+  };
+
   return (
     <Box p={2}>
       <Box mb={1} display="flex" justifyContent="space-between">
@@ -95,7 +101,7 @@ export default function PokemonList() {
             ) : (
               <>
                 {data.getAllPokemonSpecies.map((item) => (
-                  <TableRow key={item}>
+                  <TableRow key={item} onClick={() => onPokemonClick(item)}>
                     <TableCell component="th" scope="row">
                       {item}
                     </TableCell>
@@ -114,7 +120,6 @@ export default function PokemonList() {
           />
         </Box>
       </TableContainer>
-      {/* <button onChange={search}>Search</button> */}
     </Box>
   );
 }
