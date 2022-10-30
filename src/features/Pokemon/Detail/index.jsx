@@ -1,18 +1,22 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
 import { useParams } from "react-router-dom";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import Divider from "@mui/material/Divider";
 import Loader from "../../../UI/common/Loader";
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
 import { GET_POKEMON_BY_SPECIES } from "../../../queries/getPokemons";
 
 export default function PokemonDetails() {
   const params = useParams();
+  const [added, setAdded] = useState();
 
   const { data, loading } = useQuery(GET_POKEMON_BY_SPECIES, {
     variables: {
@@ -20,12 +24,20 @@ export default function PokemonDetails() {
     },
   });
 
+  useEffect(() => {
+    let favPokemons = JSON.parse(localStorage.getItem("favpoks"));
+    if (favPokemons && favPokemons.length > 0) {
+      let idx = favPokemons.findIndex((x) => x === params.species);
+      if (idx > -1) setAdded(true);
+    }
+  }, [params.species]);
+
   const renderBaseStats = () => {
     let stats = [];
     for (let key in data.getPokemon.baseStats) {
       if (key === "__typename") continue;
       stats.push(
-        <ListItem>
+        <ListItem key={key}>
           <ListItemText
             primary={`${key} : ${data.getPokemon.baseStats[key]}`}
           />
@@ -33,6 +45,20 @@ export default function PokemonDetails() {
       );
     }
     return stats;
+  };
+
+  const addToWatchList = () => {
+    let favPokemons = JSON.parse(localStorage.getItem("favpoks"));
+    if (!favPokemons) {
+      favPokemons = [];
+      favPokemons.push(params.species);
+      localStorage.setItem("favpoks", JSON.stringify(favPokemons));
+      setAdded(true);
+    } else {
+      favPokemons.push(params.species);
+      localStorage.setItem("favpoks", JSON.stringify(favPokemons));
+      setAdded(true);
+    }
   };
 
   if (loading || !data) {
@@ -43,9 +69,32 @@ export default function PokemonDetails() {
     <Box p={2}>
       <Paper>
         <Box p={2}>
-          <Typography variant="h6" gutterBottom>
-            {params.species}
-          </Typography>
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <Typography variant="h6" gutterBottom>
+              {params.species}
+            </Typography>
+            {!added ? (
+              <Button
+                size="small"
+                onClick={addToWatchList}
+                startIcon={<AddIcon />}
+              >
+                Add To Watchlist
+              </Button>
+            ) : (
+              <Button
+                size="small"
+                onClick={addToWatchList}
+                startIcon={<RemoveIcon />}
+              >
+                Remove from Watchlist
+              </Button>
+            )}
+          </Box>
           <Divider />
           <Typography mt={1} variant="body1" gutterBottom>
             Leveling Rate:{" "}
@@ -72,7 +121,8 @@ export default function PokemonDetails() {
               : "N/A"}
           </Typography>
           <Typography mt={1} variant="body1" gutterBottom>
-            Gender: Male - ${data.getPokemon.gender.male}, Female - ${data.getPokemon.gender.female}
+            Gender: Male - {data.getPokemon.gender.male}, Female -{" "}
+            {data.getPokemon.gender.female}
           </Typography>
           <Typography mt={1} variant="body1" gutterBottom>
             Stats:
