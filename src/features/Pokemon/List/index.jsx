@@ -26,6 +26,8 @@ export default function PokemonList() {
     },
   });
 
+  console.log('data: ',data)
+
   const handlePageChange = (event, value) => {
     let newValue = 10 * (value - 1);
     fetchMore({

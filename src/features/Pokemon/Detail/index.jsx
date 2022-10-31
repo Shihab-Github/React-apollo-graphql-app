@@ -24,6 +24,8 @@ export default function PokemonDetails() {
     },
   });
 
+  console.log("data: ", data);
+
   useEffect(() => {
     let favPokemons = JSON.parse(localStorage.getItem("favpoks"));
     if (favPokemons && favPokemons.length > 0) {
@@ -74,7 +76,7 @@ export default function PokemonDetails() {
             alignItems="center"
             justifyContent="space-between"
           >
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" gutterBottom data-testid="iam">
               {params.species}
             </Typography>
             {!added ? (
