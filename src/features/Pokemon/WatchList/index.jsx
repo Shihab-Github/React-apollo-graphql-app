@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useReactiveVar } from "@apollo/client";
 import { watchList } from "../../../client";
 import Box from "@mui/material/Box";
@@ -11,14 +11,30 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import IconButton from "@mui/material/IconButton";
 
 export default function WatchList() {
   const favPoks = useReactiveVar(watchList);
+  const [order, setOrder] = useState("asc");
 
   const remove = (species) => {
     let items = watchList();
     items = items.filter((x) => x !== species);
     watchList(items);
+  };
+
+  const orderBy = (ord) => {
+    let items = [...watchList()];
+    let result = [];
+    if (ord === "desc") {
+      result = items.sort();
+    } else {
+      result = items.reverse();
+    }
+    setOrder(ord);
+    watchList(result);
   };
 
   return (
@@ -36,6 +52,21 @@ export default function WatchList() {
             <TableRow>
               <TableCell>
                 <strong>Species</strong>
+                {order === "asc" ? (
+                  <IconButton
+                    aria-label="delete"
+                    onClick={() => orderBy("desc")}
+                  >
+                    <ArrowDownwardIcon />
+                  </IconButton>
+                ) : (
+                  <IconButton
+                    aria-label="delete"
+                    onClick={() => orderBy("asc")}
+                  >
+                    <ArrowUpwardIcon />
+                  </IconButton>
+                )}
               </TableCell>
               <TableCell component="th" align="right" scope="row">
                 <strong>Action</strong>
