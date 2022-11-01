@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { useQuery, useReactiveVar } from "@apollo/client";
-import { watchList } from "../../../client";
+import { useQuery } from "@apollo/client";
 import Box from "@mui/material/Box";
 import { useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
@@ -19,7 +18,6 @@ import { GET_ALL_POKEMONS } from "../../../queries/getPokemons";
 
 export default function PokemonList() {
   const navigate = useNavigate();
-  const watchListPoks = useReactiveVar(watchList);
   const [page, setPage] = useState(1);
   const { data, fetchMore, updateQuery, refetch } = useQuery(GET_ALL_POKEMONS, {
     variables: {
@@ -27,8 +25,6 @@ export default function PokemonList() {
       take: 10,
     },
   });
-
-  console.log("watchListPoks: ", watchListPoks);
 
   const handlePageChange = (event, value) => {
     let newValue = 10 * (value - 1);

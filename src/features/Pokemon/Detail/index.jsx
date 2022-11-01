@@ -49,19 +49,14 @@ export default function PokemonDetails() {
   };
 
   const addToWatchList = () => {
-    // let favPokemons = JSON.parse(localStorage.getItem("favpoks"));
-    // if (!favPokemons) {
-    //   favPokemons = [];
-    //   favPokemons.push(params.species);
-    //   localStorage.setItem("favpoks", JSON.stringify(favPokemons));
-    //   setAdded(true);
-    // } else {
-    //   favPokemons.push(params.species);
-    //   localStorage.setItem("favpoks", JSON.stringify(favPokemons));
-    //   setAdded(true);
-    // }
     let items = watchList();
     items.push(params.species);
+    watchList(items);
+  };
+
+  const removeFromWatchList = () => {
+    let items = watchList();
+    items = items.filter((x) => x !== params.species);
     watchList(items);
   };
 
@@ -92,7 +87,7 @@ export default function PokemonDetails() {
             ) : (
               <Button
                 size="small"
-                onClick={addToWatchList}
+                onClick={removeFromWatchList}
                 startIcon={<RemoveIcon />}
               >
                 Remove from Watchlist
