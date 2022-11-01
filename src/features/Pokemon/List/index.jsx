@@ -24,7 +24,7 @@ export default function PokemonList() {
       offset: 0,
       take: 10,
     },
-    // fetchPolicy: "network-only",
+    fetchPolicy: "network-only",
   });
 
   const handlePageChange = (event, value) => {
