@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
+import { watchList } from "../../../client";
 import { useParams } from "react-router-dom";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
@@ -23,8 +24,6 @@ export default function PokemonDetails() {
       pokemon: params.species.toLowerCase(),
     },
   });
-
-  console.log("data: ", data);
 
   useEffect(() => {
     let favPokemons = JSON.parse(localStorage.getItem("favpoks"));
@@ -50,17 +49,20 @@ export default function PokemonDetails() {
   };
 
   const addToWatchList = () => {
-    let favPokemons = JSON.parse(localStorage.getItem("favpoks"));
-    if (!favPokemons) {
-      favPokemons = [];
-      favPokemons.push(params.species);
-      localStorage.setItem("favpoks", JSON.stringify(favPokemons));
-      setAdded(true);
-    } else {
-      favPokemons.push(params.species);
-      localStorage.setItem("favpoks", JSON.stringify(favPokemons));
-      setAdded(true);
-    }
+    // let favPokemons = JSON.parse(localStorage.getItem("favpoks"));
+    // if (!favPokemons) {
+    //   favPokemons = [];
+    //   favPokemons.push(params.species);
+    //   localStorage.setItem("favpoks", JSON.stringify(favPokemons));
+    //   setAdded(true);
+    // } else {
+    //   favPokemons.push(params.species);
+    //   localStorage.setItem("favpoks", JSON.stringify(favPokemons));
+    //   setAdded(true);
+    // }
+    let items = watchList();
+    items.push(params.species);
+    watchList(items);
   };
 
   if (loading || !data) {

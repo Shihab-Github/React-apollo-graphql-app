@@ -1,5 +1,4 @@
 import { gql } from "graphql-tag";
-import { PokemonEnum } from "./pokemon.graphql";
 
 export const GET_ALL_POKEMONS = gql`
   query getAllPokemonSpecies($offset: Int, $take: Int) {
@@ -30,6 +29,14 @@ export const GET_POKEMON_BY_SPECIES = gql`
       }
       levellingRate
       bulbapediaPage
+    }
+  }
+`;
+
+export const READ_WATCHLIST = gql`
+  query watchList {
+    watchList {
+      name
     }
   }
 `;
