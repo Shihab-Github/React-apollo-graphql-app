@@ -26,7 +26,7 @@ export default function PokemonDetails() {
   });
 
   useEffect(() => {
-    let favPokemons = JSON.parse(localStorage.getItem("favpoks"));
+    let favPokemons = watchList();
     if (favPokemons && favPokemons.length > 0) {
       let idx = favPokemons.findIndex((x) => x === params.species);
       if (idx > -1) setAdded(true);
@@ -52,12 +52,14 @@ export default function PokemonDetails() {
     let items = watchList();
     items.push(params.species);
     watchList(items);
+    setAdded(true);
   };
 
   const removeFromWatchList = () => {
     let items = watchList();
     items = items.filter((x) => x !== params.species);
     watchList(items);
+    setAdded(false);
   };
 
   if (loading || !data) {
